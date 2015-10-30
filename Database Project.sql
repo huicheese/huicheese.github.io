@@ -21,14 +21,17 @@ phoneNum char(25)
 )
 
 create table ordered(
-loginName char(30) primary key,
+oid char(30) primary key,
+ogid char(25),
+loginName char(30),
 ISBN char(15) not null,
 order_date time not null,
 order_status char(30) not null,
 foreign key (loginName) references customers
 )
 
-create table opinions(
+create table feedback(
+fid char(30) primary key,
 loginName char(30),
 ISBN char(15),
 rating int check (rating<=10 and rating >=0) not null,
@@ -36,8 +39,7 @@ optionalComment char(1000),
 useful int not null default 0,
 veryUseful int not null default 0,
 useless int not null default 0,
-timeStamp time,
-primary key (loginName, ISBN),
+feedbackTime time,
 foreign key (loginName) references customers,
 foreign key (ISBN) references books
 )
