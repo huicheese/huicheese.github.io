@@ -45,8 +45,7 @@ foreign key (loginID) references customers(loginID),
 foreign key (ISBN) references books(ISBN)
 );
 
-
-create table rating(
+create table ratings(
 ISBN char(15),
 feedbackID char(30),
 ratingID char(30),
@@ -57,16 +56,14 @@ foreign key (ratingID) references customers(loginID),
 foreign key (ISBN) references feedback(ISBN)
 );
 
-DROP Trigger books_BEFORE_UPDATE;
-
 #################### TRIGGER TO PREVENT STOCK AND PRICE FROM BEING NEGATIVE ##########################################
-USE `triggertest`;
+USE `triggertest`;  #replace triggertest with schema name here
 
 DELIMITER $$
 
-DROP TRIGGER IF EXISTS triggertest.books_BEFORE_UPDATE$$
+DROP TRIGGER IF EXISTS triggertest.books_BEFORE_INSERT$$  #replace triigertest with schema name
 USE `triggertest`$$
-CREATE DEFINER=`root`@`localhost` TRIGGER `triggertest`.`books_BEFORE_UPDATE` BEFORE UPDATE ON `books` FOR EACH ROW
+CREATE DEFINER=`root`@`localhost` TRIGGER `triggertest`.`books_BEFORE_INSERT` BEFORE INSERT ON `books` FOR EACH ROW
 BEGIN
 	IF NEW.stock <0 THEN
 		SET NEW.stock = 0;
@@ -79,3 +76,23 @@ $$
 DELIMITER ;
 ######################################################################################################################
 
+#####################Check if ratingID and feedbackID is the same#####################################################
+USE `triggertest`;
+
+DELIMITER $$
+
+DROP TRIGGER IF EXISTS triggertest.ratings_BEFORE_INSERT$$
+USE `triggertest`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `triggertest`.`ratings_BEFORE_INSERT` BEFORE INSERT ON `ratings` FOR EACH ROW
+BEGIN
+	IF NEW.ratingID = NEW.feedbackID THEN
+		SET new.ratingID = null;
+	END IF;
+END
+$$
+DELIMITER ;
+###################################################################################################################### 
+
+### Some test codes ######
+insert into ratings  value ('2125', 'c' , 'b' , '0') ;
+insert into books value ('1', 'a','b','c', 1356,-77,-69, 'Hardcover','f','g');
