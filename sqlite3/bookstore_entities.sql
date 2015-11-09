@@ -9,6 +9,7 @@ create table books(
     format char(9) CHECK(format='Hardcover'OR format='Softcover'),
     keywords char(100),
     subject char(100),
+    picture text,
     PRIMARY KEY (ISBN)
 );
 
@@ -80,7 +81,7 @@ drop table order_items;
 
 insert into customers VALUES ('full name','loginID','password', 'majorCCN','address','696969696969');
 insert into customers VALUES ('full name','loginID2','password', 'majorCCN','address','696969696969');
-insert into books VALUES ('b','title','author','publisher', 1999, 9, 99, 'Hardcover', 'keyword','subject');
+insert into books VALUES ('b','title','author','publisher', 1999, 9, 99, 'Hardcover', 'keyword','subject','https://www.google.com.sg/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=0CAcQjRxqFQoTCMi-uqvcg8kCFUdVjgodEuMHEw&url=http%3A%2F%2Fwww.pearsonhighered.com%2Feducator%2Fproduct%2FComputer-Networking-A-TopDown-Approach-5E%2F9780136079675.page&psig=AFQjCNHjfi_1vQ7Y8tPhOqb1edlShwnaMw&ust=1447171565211177');
 insert into has_orders(loginID,order_date,order_status) VALUES ('loginID',1999-02-15,'Shipped');
 insert into feedback VALUES ('loginID','b',1,'wow this book sucks',1999-09-11);
 insert into order_items VALUES (1, 'b',1);
