@@ -26,7 +26,7 @@ create table customers(
 
 
 create table has_orders(
-    oid INTEGER PRIMARY KEY AUTOINCREMENT,
+    oid INTEGER,
     loginID char(30),
     order_date time NOT NULL,
     order_status char(30) CHECK(order_status ='Pending Order'
@@ -34,10 +34,11 @@ create table has_orders(
                                 OR order_status='Shipped'
                                 OR order_status='Canceled'
                                 OR order_status='Returned'),
+    PRIMARY KEY (oid),
     FOREIGN KEY (loginID) REFERENCES customers(loginID)
 );
 
-    
+
 create table order_items(
     oid INTEGER,
     ISBN char(15) NOT NULL,

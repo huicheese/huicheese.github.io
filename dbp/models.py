@@ -175,4 +175,4 @@ class Feedback(models.Model):
         unique_together = (('loginID', 'ISBN'),)
 
 
-class HasOrders(models.Model):
+class Hasorders(models.Model):
