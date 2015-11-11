@@ -19,7 +19,7 @@ class Books(models.Model):
     publisher = models.CharField(max_length=50)
     yearpublished = models.IntegerField(db_column='yearPublished')  # Field name made lowercase.
     stock = models.IntegerField()
-    price = models.FloatField()  
+    price = models.TextField()  # This field type is a guess.
     format = models.CharField(max_length=9, blank=True, null=True)
     keywords = models.CharField(max_length=100, blank=True, null=True)
     subject = models.CharField(max_length=100, blank=True, null=True)
@@ -32,7 +32,7 @@ class Books(models.Model):
 
 class Customers(models.Model):
     fullname = models.CharField(db_column='fullName', max_length=100)  # Field name made lowercase.
-    loginid = models.CharField(db_column='loginID', primary_key=True, max_length=30)  # Field name made lowercase.
+    loginid = models.CharField(db_column='loginID', primary_key=True, max_length=30, blank=True, null=True)  # Field name made lowercase.
     pw = models.CharField(max_length=50)
     majorccn = models.CharField(db_column='majorCCN', max_length=19, blank=True, null=True)  # Field name made lowercase.
     address = models.CharField(max_length=100)
@@ -43,42 +43,38 @@ class Customers(models.Model):
         db_table = 'customers'
 
 
-class Feedback(models.Model):
+class Feedbacks(models.Model):
     loginid = models.CharField(db_column='loginID', primary_key=True, max_length=30)  # Field name made lowercase.
+    loginid = models.ForeignKey('Customers', db_column='loginID')
     isbn = models.CharField(db_column='ISBN', primary_key=True, max_length=15)  # Field name made lowercase.
+    isbn = models.ForeignKey('Books', db_column='ISBN')
     review = models.IntegerField(blank=True, null=True)
     optionalcomment = models.TextField(db_column='optionalComment', blank=True, null=True)  # Field name made lowercase.
     feedback_date = models.TimeField()
 
     class Meta:
         managed = False
-        db_table = 'feedback'
+        db_table = 'feedbacks'
         unique_together = (('loginID', 'ISBN'),)
 
 
-class Makeorder(models.Model):
+class OrderItems(models.Model):
     oid = models.IntegerField(primary_key=True, blank=True, null=True)
-    loginid = models.CharField(db_column='loginID', primary_key=True, max_length=30, blank=True, null=True)  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'makeorder'
-        unique_together = (('oid', 'loginID'),)
-
-
-class Orderitems(models.Model):
-    oid = models.IntegerField(primary_key=True, blank=True, null=True)
-    isbn = models.CharField(db_column='ISBN', primary_key=True, max_length=15)  # Field name made lowercase.
+    isbn = models.CharField(db_column='ISBN', primary_key=True, max_length=15, blank=True, null=True)  # Field name made lowercase.
+    isbn = models.ForeignKey('Books', db_column='ISBN')
+    oid = models.ForeignKey('Orders', db_column='oid')
     qty = models.IntegerField()
 
     class Meta:
         managed = False
-        db_table = 'orderitems'
+        db_table = 'order_items'
         unique_together = (('ISBN', 'oid'),)
 
 
 class Orders(models.Model):
     oid = models.IntegerField(primary_key=True, blank=True, null=True)
+    loginid = models.CharField(db_column='loginID', max_length=30)  # Field name made lowercase.
+    loginid = models.ForeignKey('Customers', db_column='loginID')
     order_date = models.TimeField()
     order_status = models.CharField(max_length=30, blank=True, null=True)
 
@@ -89,8 +85,11 @@ class Orders(models.Model):
 
 class Ratings(models.Model):
     isbn = models.CharField(db_column='ISBN', primary_key=True, max_length=15, blank=True, null=True)  # Field name made lowercase.
+    isbn = models.ForeignKey('Books', db_column='ISBN')
     feedbackid = models.CharField(db_column='feedbackID', primary_key=True, max_length=30, blank=True, null=True)  # Field name made lowercase.
+    feedbackid = models.ForeignKey('Feedbacks', db_column='feedbackID')
     ratingid = models.CharField(db_column='ratingID', primary_key=True, max_length=30, blank=True, null=True)  # Field name made lowercase.
+    ratingid = models.ForeignKey('Customers', db_column='ratingID')
     rating = models.IntegerField(blank=True, null=True)
 
     class Meta:
