@@ -17,9 +17,9 @@ class Books(models.Model):
     title = models.CharField(max_length=50)
     authors = models.CharField(max_length=100)
     publisher = models.CharField(max_length=50)
-    yearpublished = models.TextField(db_column='yearPublished')  # Field name made lowercase. This field type is a guess.
+    yearpublished = models.IntegerField(db_column='yearPublished')  # Field name made lowercase.
     stock = models.IntegerField()
-    price = models.TextField()  # This field type is a guess.
+    price = models.FloatField()  
     format = models.CharField(max_length=9, blank=True, null=True)
     keywords = models.CharField(max_length=100, blank=True, null=True)
     subject = models.CharField(max_length=100, blank=True, null=True)
