@@ -24,32 +24,6 @@ create table customers(
     PRIMARY KEY (loginID)
 );
 
-
-create table has_orders(
-    oid INTEGER,
-    loginID char(30),
-    order_date time NOT NULL,
-    order_status char(30) CHECK(order_status ='Pending Order'
-                                OR order_status='Payment Received'
-                                OR order_status='Shipped'
-                                OR order_status='Canceled'
-                                OR order_status='Returned'),
-    PRIMARY KEY (oid),
-    FOREIGN KEY (loginID) REFERENCES customers(loginID)
-);
-
-
-create table order_items(
-    oid INTEGER,
-    ISBN char(15) NOT NULL,
-    qty int NOT NULL CHECK (qty >=0),
-    primary key (ISBN, oid),
-    foreign key (ISBN) references books(ISBN),
-    FOREIGN KEY (oid) REFERENCES has_orders(oid)
-);
-
-
-
 create table feedback(
     loginID char(30) not null,
     ISBN char(15) not null,
@@ -61,6 +35,8 @@ create table feedback(
     foreign key (ISBN) references books(ISBN)
 );
 
+#isbn reference book or feedback table?
+#same for fedbackID reference customers not feedback table
 create table ratings(
     ISBN char(15),
     feedbackID char(30) CHECK(feedbackID != ratingID),
@@ -70,6 +46,35 @@ create table ratings(
     foreign key (ratingID) references customers(loginID),
     foreign key (feedbackID) references customers(loginID),
     foreign key (ISBN) references books(ISBN)
+);
+
+create table orderitems(
+    oid INTEGER,
+    ISBN char(15) NOT NULL,
+    qty int NOT NULL CHECK (qty >=0),
+    primary key (ISBN, oid),
+    foreign key (ISBN) references books(ISBN),
+    FOREIGN KEY (oid) REFERENCES orders(oid)
+);
+
+
+create table makeorder(
+    oid INTEGER,
+    loginID char(30),
+    PRIMARY KEY (oid, loginID),
+    FOREIGN KEY (loginID) REFERENCES customers(loginID),
+    FOREIGN KEY (oid) REFERENCES orders(oid)
+);
+
+create table orders(
+  oid INTEGER,
+  order_date time NOT NULL,
+  order_status char(30) CHECK(order_status ='Pending Order'
+                              OR order_status='Payment Received'
+                              OR order_status='Shipped'
+                              OR order_status='Canceled'
+                              OR order_status='Returned'),
+  PRIMARY KEY (oid)
 );
 
 drop table books;
