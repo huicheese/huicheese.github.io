@@ -38,7 +38,7 @@ create table has_orders(
     foreign key (loginID) references customers(loginID)
 );
 
-    
+
 create table order_items(
     oid INTEGER,
     ISBN char(15),
@@ -68,8 +68,8 @@ create table ratings(
     rating INTEGER CHECK (rating>=0 AND rating <=2),
     primary key (ISBN, feedbackID, ratingID),
     foreign key (ratingID) references customers(loginID),
-    foreign key (feedbackID) references customers(loginID),
-    foreign key (ISBN) references books(ISBN)
+    foreign key (feedbackID) references feedback(loginID),
+    foreign key (ISBN) references feedback(ISBN)
 );
 
 drop table feedback;
