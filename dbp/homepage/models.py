@@ -13,7 +13,7 @@ from django.db import models
 
 
 class Books(models.Model):
-    isbn = models.CharField(db_column='ISBN', primary_key=True, max_length=15, blank=True, null=True)  # Field name made lowercase.
+    isbn = models.CharField(db_column='ISBN', primary_key=True, max_length=15, blank=True, null=False)  # Field name made lowercase.
     title = models.CharField(max_length=50)
     authors = models.CharField(max_length=100)
     publisher = models.CharField(max_length=50)
@@ -32,7 +32,7 @@ class Books(models.Model):
 
 class Customers(models.Model):
     fullname = models.CharField(db_column='fullName', max_length=100)  # Field name made lowercase.
-    loginid = models.CharField(db_column='loginID', primary_key=True, max_length=30, blank=True, null=True)  # Field name made lowercase.
+    loginid = models.CharField(db_column='loginID', primary_key=True, max_length=30, blank=True, null=False)  # Field name made lowercase.
     pw = models.CharField(max_length=50)
     majorccn = models.CharField(db_column='majorCCN', max_length=19, blank=True, null=True)  # Field name made lowercase.
     address = models.CharField(max_length=100)
@@ -55,7 +55,7 @@ class Feedbacks(models.Model):
     class Meta:
         managed = False
         db_table = 'feedbacks'
-        unique_together = (('loginID', 'ISBN'),)
+        unique_together = (('loginid', 'isbn'),)
 
 
 class OrderItems(models.Model):
@@ -68,11 +68,11 @@ class OrderItems(models.Model):
     class Meta:
         managed = False
         db_table = 'order_items'
-        unique_together = (('ISBN', 'oid'),)
+        unique_together = (('isbn', 'oid'),)
 
 
 class Orders(models.Model):
-    oid = models.IntegerField(primary_key=True, blank=True, null=True)
+    oid = models.IntegerField(primary_key=True, blank=True, null=False)
     loginid = models.CharField(db_column='loginID', max_length=30)  # Field name made lowercase.
     loginid = models.ForeignKey('Customers', db_column='loginID')
     order_date = models.TimeField()
@@ -84,15 +84,15 @@ class Orders(models.Model):
 
 
 class Ratings(models.Model):
-    isbn = models.CharField(db_column='ISBN', primary_key=True, max_length=15, blank=True, null=True)  # Field name made lowercase.
+    isbn = models.CharField(db_column='ISBN', primary_key=True, max_length=15, blank=True, null=False)  # Field name made lowercase.
     isbn = models.ForeignKey('Books', db_column='ISBN')
-    feedbackid = models.CharField(db_column='feedbackID', primary_key=True, max_length=30, blank=True, null=True)  # Field name made lowercase.
+    feedbackid = models.CharField(db_column='feedbackID', primary_key=True, max_length=30, blank=True, null=False)  # Field name made lowercase.
     feedbackid = models.ForeignKey('Feedbacks', db_column='feedbackID')
-    ratingid = models.CharField(db_column='ratingID', primary_key=True, max_length=30, blank=True, null=True)  # Field name made lowercase.
+    ratingid = models.CharField(db_column='ratingID', primary_key=True, max_length=30, blank=True, null=False)  # Field name made lowercase.
     ratingid = models.ForeignKey('Customers', db_column='ratingID')
     rating = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'ratings'
-        unique_together = (('ISBN', 'feedbackID', 'ratingID'),)
+        unique_together = (('isbn', 'feedbackid', 'ratingid'),)
